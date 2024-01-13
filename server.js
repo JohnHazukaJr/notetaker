@@ -1,13 +1,13 @@
 const express = require('express');
 const fs = require('fs');
+const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const app = express();
-const port = 3000;
+const PORT = process.env.PORT || 3000;  // Corrected for Heroku port configuration
 
 app.use(express.json());
-
-// Serve static files from the 'public' directory
-app.use(express.static('public'));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));  // Serve static files from 'public'
 
 // GET endpoint to fetch all notes
 app.get('/api/notes', (req, res) => {
@@ -42,14 +42,16 @@ app.post('/api/notes', (req, res) => {
     });
 });
 
-
-// Route to serve notes.html when '/notes' is accessed
+// HTML routes
 app.get('/notes', (req, res) => {
-    // The path is relative to the server.js file
-    res.sendFile('./public/notes.html', { root: __dirname });
+    res.sendFile(path.join(__dirname, 'public/notes.html'));
+});
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
 // Start the server
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+app.listen(PORT, () => {
+    console.log(`Server is listening on port ${PORT}`);
 });
