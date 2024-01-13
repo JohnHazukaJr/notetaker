@@ -210,7 +210,7 @@ app.use(express.static('public'));
 // API route to get notes from db.json
 app.get('/api/notes', (req, res) => {
   try {
-    const notes = JSON.parse(fs.readFileSync('db.json', 'utf8'));
+    const notes = JSON.parse(fs.readFileSync('./db/db.json', 'utf8'));
     res.json(notes);
   } catch (error) {
     res.status(500).json({ error: "Error reading notes" });
@@ -223,15 +223,16 @@ app.post('/api/notes', (req, res) => {
     const newNote = req.body;
     newNote.id = uuidv4(); // Generate a unique ID for the note
 
-    const notes = JSON.parse(fs.readFileSync('db.json', 'utf8'));
+    const notes = JSON.parse(fs.readFileSync('./db/db.json', 'utf8'));
     notes.push(newNote);
 
-    fs.writeFileSync('db.json', JSON.stringify(notes));
+    fs.writeFileSync('./db/db.json', JSON.stringify(notes));
     res.json(newNote);
   } catch (error) {
     res.status(500).json({ error: "Error saving note" });
   }
 });
+
 
 // HTML routes
 app.get('/notes', (req, res) => {

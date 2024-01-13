@@ -11,7 +11,7 @@ app.use(express.static('public'));
 
 // GET endpoint to fetch all notes
 app.get('/api/notes', (req, res) => {
-    fs.readFile('db.json', 'utf8', (err, data) => {
+    fs.readFile('./db/db.json', 'utf8', (err, data) => {
         if (err) {
             console.error(err);
             return res.status(500).send('Error reading file');
@@ -24,7 +24,7 @@ app.get('/api/notes', (req, res) => {
 app.post('/api/notes', (req, res) => {
     const newNote = { id: uuidv4(), ...req.body };
 
-    fs.readFile('db.json', 'utf8', (err, data) => {
+    fs.readFile('./db/db.json', 'utf8', (err, data) => {
         if (err) {
             console.error(err);
             return res.status(500).send('Error reading file');
@@ -32,7 +32,7 @@ app.post('/api/notes', (req, res) => {
         const notes = JSON.parse(data);
         notes.push(newNote);
 
-        fs.writeFile('db.json', JSON.stringify(notes, null, 2), (err) => {
+        fs.writeFile('./db/db.json', JSON.stringify(notes, null, 2), (err) => {
             if (err) {
                 console.error(err);
                 return res.status(500).send('Error writing file');
@@ -41,6 +41,7 @@ app.post('/api/notes', (req, res) => {
         });
     });
 });
+
 
 // Route to serve notes.html when '/notes' is accessed
 app.get('/notes', (req, res) => {
